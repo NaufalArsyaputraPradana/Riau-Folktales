@@ -385,7 +385,7 @@
     <!--start switcher-->
 
     <!--end switcher-->
-    {{-- @include('sweetalert::alert') --}}
+    @include('sweetalert::alert')
 
     @yield('script')
 

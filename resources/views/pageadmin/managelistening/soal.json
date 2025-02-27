@@ -1,0 +1,24 @@
+[
+    {
+        "suara": "tester sound one",
+        "jawaban": "a",
+        "pilihan": {
+            "a": "a",
+            "b": "b",
+            "c": "c",
+            "d": "d"
+        },
+        "pertanyaan": "soal1"
+    },
+    {
+        "suara": "tester sound two",
+        "jawaban": "b",
+        "pilihan": {
+            "a": "aa",
+            "b": "bb",
+            "c": "cc",
+            "d": "dd"
+        },
+        "pertanyaan": "soal2"
+    }
+]
