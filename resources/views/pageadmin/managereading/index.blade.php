@@ -42,8 +42,7 @@
                                             @endforeach
                                         </td>
                                         <td>
-                                            <a href="{{ route('reading.edit', $r->id) }}"
-                                                class="btn btn-sm btn-warning">Edit</a>
+                                            <a href="{{ route('reading.edit', $r->id) }}" class="btn btn-sm btn-warning">Edit</a>
                                             <form action="{{ route('reading.destroy', $r->id) }}" method="POST"
                                                 style="display:inline;" class="delete-form">
                                                 @csrf

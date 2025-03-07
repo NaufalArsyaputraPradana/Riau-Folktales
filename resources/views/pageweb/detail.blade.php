@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $cerita->nama_cerita }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-	<link href="{{ asset('web') }}/assets/css/app.css" rel="stylesheet">
+    <link href="{{ asset('web') }}/assets/css/app.css" rel="stylesheet">
 
     <style>
         body {
@@ -40,7 +40,7 @@
             position: absolute;
             width: 100%;
             height: 100%;
-                background: url('{{ asset('public/cerita/' . $cerita->image) }}');
+            background-image: url('{{ asset('public/cerita/' . $cerita->image) }}');
             background-size: cover;
             background-blend-mode: multiply;
             background-color: rgba(0, 0, 0, 0.5);
@@ -91,84 +91,132 @@
             top: 20px;
             z-index: 1000;
         }
+        .card {
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+        }
+
+
+        .btn {
+            border-radius: 30px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: #ffffff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        .btn-danger {
+            background: #ff5a5a;
+            color: #ffffff;
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background: #d43f3f;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 90, 90, 0.3);
+        }
     </style>
 </head>
-<body style="background: linear-gradient(to right, rgb(179, 221, 240), rgba(179, 221, 240, 0.811)), url('https://png.pngtree.com/png-vector/20220921/ourmid/pngtree-batik-jambi-angso-duo-melayu-png-image_6209068.png');">
-	<div class="watermark">
-		<img src="{{ asset('web') }}/assets/images/bg/watermark3.png" alt="Logo Riau" class="watermark-logo">
-	</div>
-	<div class="book-container">
-        <div class="book" id="book">
-            <div class="cover d-flex flex-column align-items-center justify-content-center text-white fw-bold font-riau-with-shadow-dark">
-              <span>{{ $cerita->nama_cerita }}</span>
-              <p class="mt-2 text-white" style="font-size: 14px;">{{ $cerita->deskripsi }}</p>
-            </div>
-            <div class="page">
-                <div class="page-content" id="pageContent"></div>
-                <div class="pagination-controls">
-                    <button class="btn btn-sm btn-danger" id="prevBtn" disabled>Previous</button>
-                    <span class="page-number" id="pageNumber">Page 1</span>
-                    <button class="btn btn-sm btn-success" id="nextBtn">Next</button>
-                </div>
+<body
+    style="background: linear-gradient(to right, rgb(179, 221, 240), rgba(179, 221, 240, 0.811)), url('https://png.pngtree.com/png-vector/20220921/ourmid/pngtree-batik-jambi-angso-duo-melayu-png-image_6209068.png');">
+<div class="watermark">
+    <img src="{{ asset('web') }}/assets/images/bg/watermark3.png" alt="Logo Riau" class="watermark-logo">
+</div>
+<div class="book-container">
+    <div class="book" id="book">
+        <div
+            class="cover d-flex flex-column align-items-center justify-content-center text-white fw-bold font-riau-with-shadow-dark">
+            <span>{{ $cerita->nama_cerita }}</span>
+            <p class="mt-2 text-white" style="font-size: 14px;">{{ $cerita->deskripsi }}</p>
+        </div>
+        <div class="page">
+            <div class="page-content" id="pageContent"></div>
+            <div class="pagination-controls">
+                <button class="btn btn-sm btn-danger" id="prevBtn" disabled>Previous</button>
+                <span class="page-number" id="pageNumber">Page 1</span>
+                <button class="btn btn-sm btn-success" id="nextBtn">Next</button>
             </div>
         </div>
     </div>
-    <a href="{{ route('pageweb.list') }}" class="btn btn-sm btn-danger corner-button">Back</a>
+</div>
+<a href="{{ route('pageweb.list') }}" class="btn btn-sm btn-danger corner-button">Back</a>
+<footer class="page-footer"
+        style="background: linear-gradient(to right, rgb(179, 221, 240), transparent), url('https://png.pngtree.com/png-vector/20220921/ourmid/pngtree-batik-jambi-angso-duo-melayu-png-image_6209068.png');">
+    <p class="mb-0 font-riau-with-shadow-white">Collection of Riau Folktales</p>
+</footer>
+<script>
+    const content = `{{ $cerita->cerita }}`;
 
-    <script>
-        const content = `{{ $cerita->cerita }}`;
+    const wordsPerPage = 130;
+    let currentPage = 1;
 
-        const wordsPerPage = 130;
-        let currentPage = 1;
+    // Split content into words and then into pages
+    const words = content.split(' ');
+    const totalPages = Math.ceil(words.length / wordsPerPage);
 
-        // Split content into words and then into pages
-        const words = content.split(' ');
-        const totalPages = Math.ceil(words.length / wordsPerPage);
+    function displayPage(pageNum) {
+        const start = (pageNum - 1) * wordsPerPage;
+        const end = start + wordsPerPage;
+        const pageWords = words.slice(start, end);
+        document.getElementById('pageContent').textContent = pageWords.join(' ');
+        document.getElementById('pageNumber').textContent = `Page ${pageNum} of ${totalPages}`;
 
-        function displayPage(pageNum) {
-            const start = (pageNum - 1) * wordsPerPage;
-            const end = start + wordsPerPage;
-            const pageWords = words.slice(start, end);
-            document.getElementById('pageContent').textContent = pageWords.join(' ');
-            document.getElementById('pageNumber').textContent = `Page ${pageNum} of ${totalPages}`;
+        // Update button states
+        document.getElementById('prevBtn').disabled = pageNum === 1;
 
-            // Update button states
-            document.getElementById('prevBtn').disabled = pageNum === 1;
+        // Handle next button visibility
+        const nextBtn = document.getElementById('nextBtn');
 
-            // Handle next button visibility
-            const nextBtn = document.getElementById('nextBtn');
-
-            if (pageNum === totalPages) {
-                nextBtn.classList.add('d-none');
-            } else {
-                nextBtn.classList.remove('d-none');
-            }
+        if (pageNum === totalPages) {
+            nextBtn.classList.add('d-none');
+        } else {
+            nextBtn.classList.remove('d-none');
         }
+    }
 
-        // Event listeners
-        document.getElementById('book').addEventListener('click', function(e) {
-            if (e.target.classList.contains('cover') || e.target.classList.contains('book')) {
-                this.classList.toggle('open');
-            }
-        });
+    // Event listeners
+    document.getElementById('book').addEventListener('click', function (e) {
+        if (e.target.classList.contains('cover') || e.target.classList.contains('book')) {
+            this.classList.toggle('open');
+        }
+    });
 
-        document.getElementById('prevBtn').addEventListener('click', function() {
-            if (currentPage > 1) {
-                currentPage--;
-                displayPage(currentPage);
-            }
-        });
+    document.getElementById('prevBtn').addEventListener('click', function () {
+        if (currentPage > 1) {
+            currentPage--;
+            displayPage(currentPage);
+        }
+    });
 
-        document.getElementById('nextBtn').addEventListener('click', function() {
-            if (currentPage < totalPages) {
-                currentPage++;
-                displayPage(currentPage);
-            }
-        });
+    document.getElementById('nextBtn').addEventListener('click', function () {
+        if (currentPage < totalPages) {
+            currentPage++;
+            displayPage(currentPage);
+        }
+    });
 
-        // Initial display
-        displayPage(1);
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    // Initial display
+    displayPage(1);
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

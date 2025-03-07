@@ -9,12 +9,9 @@ class Reading extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'soal',
-    ];
+    protected $fillable = ['soal'];
 
     protected $casts = [
-        'soal' => 'array',
+        'soal' => 'array', // Cast 'soal' sebagai array
     ];
-
 }

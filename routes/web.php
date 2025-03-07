@@ -3,20 +3,23 @@
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Artisan;
-use App\Http\Controllers\{
-    DashboardController,
+use App\Http\Controllers\{DashboardController,
     CeritaController,
     RegisterUserController,
     LoginController,
     ReadingController,
     QuisController,
     ListeningController,
-};
+    web\ListeningWebController,
+    web\ReadingWebController};
 use App\Http\Controllers\Web\{
     IndexWebController,
     ListWebController,
     DetailWebController,
     QuizWebController,
+    ScoreReadingController,
+    ScoreListeningController,
+    ScoreQuizController
 };
 use Illuminate\Auth\Events\Logout;
 
@@ -34,7 +37,6 @@ Route::get('/run-admin', function () {
     Artisan::call('db:seed', [
         '--class' => 'UsersTableSeeder'
     ]);
-
     return "AdminSeeder has been create successfully!";
 });
 
@@ -48,7 +50,6 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logoutuser.inde
 Route::group(['middleware' => ['role:admin']], function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::resource('cerita', CeritaController::class);
-    Route::resource('reading', ReadingController::class);
 
     Route::get('/quis', [QuisController::class, 'index'])->name('quis.index');
     Route::get('/quis/create', [QuisController::class, 'create'])->name('quis.create');
@@ -65,9 +66,16 @@ Route::group(['middleware' => ['role:admin']], function () {
     Route::put('/listening/update/{id}', [ListeningController::class, 'update'])->name('listening.update');
     Route::delete('/listening/delete/{id}', [ListeningController::class, 'destroy'])->name('listening.destroy');
     Route::get('/listening/view-soal/{id}', [ListeningController::class, 'viewSoal'])->name('listening.viewSoal');
+
+    Route::get('/reading', [ReadingController::class, 'index'])->name('reading.index');
+    Route::get('/reading/create', [ReadingController::class, 'create'])->name('reading.create');
+    Route::post('/reading/store', [ReadingController::class, 'store'])->name('reading.store');
+    Route::get('/reading/edit/{id}', [ReadingController::class, 'edit'])->name('reading.edit');
+    Route::put('/reading/update/{id}', [ReadingController::class, 'update'])->name('reading.update');
+    Route::delete('/reading/delete/{id}', [ReadingController::class, 'destroy'])->name('reading.destroy');
+    Route::get('/reading/view-soal/{id}', [ReadingController::class, 'viewSoal'])->name('reading.viewSoal');
 });
 // ADMIN
-
 
 // WEB
 Route::get('/', [IndexWebController::class, 'index'])->name('pageweb.index');
@@ -75,6 +83,26 @@ Route::group(['middleware' => ['role:user,admin']], function () {
     Route::get('/list', [ListWebController::class, 'index'])->name('pageweb.list');
     Route::get('/detail/{nama_cerita}', [DetailWebController::class, 'index'])->name('pageweb.detail');
     Route::get('/play-quiz', [QuizWebController::class, 'index'])->name('pageweb.quiz');
+    Route::get('/play-listening', [ListeningWebController::class, 'index'])->name('pageweb.listening');
+    Route::get('/play-reading', [ReadingWebController::class, 'index'])->name('pageweb.reading');
+    Route::get('/api/soal', [ReadingWebController::class, 'getSoal']);
 });
-
 // WEB
+
+
+Route::group(['middleware' => ['role:user,admin']], function () {
+    //SAVE SCORE READING
+    Route::get('/score-reading', [ScoreReadingController::class, 'index'])->name('scorereading.index');
+    Route::post('/score-reading/update', [ScoreReadingController::class, 'scoreUpdateOrCreate'])->name('scorereading.update');
+    //SAVE SCORE READING
+
+    //SAVE SCORE LISTENING
+    Route::get('/score-listening', [ScoreListeningController::class, 'index'])->name('scorelistening.index');
+    Route::post('/score-listening/update', [ScoreListeningController::class, 'scoreUpdateOrCreate'])->name('scorelistening.update');
+    //SAVE SCORE LISTENING
+
+    //SAVE SCORE QUIZ
+    Route::get('/score-quiz', [ScoreQuizController::class, 'index'])->name('scorequiz.index');
+    Route::post('/score-quiz/update', [ScoreQuizController::class, 'scoreUpdateOrCreate'])->name('scorequiz.update');
+    //SAVE SCORE QUIZ
+});

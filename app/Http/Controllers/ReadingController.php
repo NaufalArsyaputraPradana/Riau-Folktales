@@ -24,24 +24,29 @@ class ReadingController extends Controller
     {
         $request->validate([
             'soal' => 'required|array|min:1',
-            'soal.*' => 'required|string',
+            'soal.*.pertanyaan' => 'required|string',
         ]);
-    
-        Reading::create([            'soal' => $request->soal, // Laravel akan otomatis menyimpan sebagai array jika di-cast di model
+
+        Reading::create([
+            'soal' => $request->soal, // Laravel akan otomatis menyimpan sebagai array jika dikast di model
         ]);
-    
-        Alert::success('Berhasil', 'Data berhasil disimpan');
+
+        Alert::success('Berhasil', 'Data berhasil disimpan.');
         return redirect()->route('reading.index');
     }
-    
 
-    public function edit(Reading $reading)
+
+    public function edit($id)
     {
+
+        $reading = Reading::find($id);
         return view('pageadmin.managereading.edit', compact('reading'));
     }
 
-    public function update(Request $request, Reading $reading)
+    public function update(Request $request, $id)
     {
+        $reading = Reading::findOrFail($id);
+
         $request->validate([
             'soal' => 'required|array',
         ]);
@@ -54,8 +59,9 @@ class ReadingController extends Controller
         return redirect()->route('reading.index');
     }
 
-    public function destroy(Reading $reading)
+    public function destroy($id)
     {
+        $reading = Reading::find($id);
         $reading->delete();
         Alert::success('Berhasil', 'Data berhasil dihapus');
         return redirect()->route('reading.index');

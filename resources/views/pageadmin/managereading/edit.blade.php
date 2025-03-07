@@ -15,8 +15,6 @@
                         <form action="{{ route('reading.update', $reading->id) }}" method="POST">
                             @csrf
                             @method('PUT')
-
-                          
                             <div class="mb-3">
                                 <label class="form-label">Soal</label>
                                 <div id="soal-container">
@@ -29,7 +27,6 @@
                                 </div>
                                 <button type="button" class="btn btn-success" id="add-soal">Tambah Soal</button>
                             </div>
-
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary px-5">Update</button>
                             </div>
@@ -68,7 +65,6 @@ document.addEventListener("DOMContentLoaded", function() {
             btn.classList.toggle("d-none", index === 0);
         });
     }
-
     updateRemoveButtons();
 });
 </script>

@@ -11,7 +11,7 @@ class ListeningController extends Controller
 {
     public function index()
     {
-       
+
         $listening = Listening::orderBy('created_at', 'desc')->get();
 
         return view('pageadmin.managelistening.index', compact('listening'));
@@ -19,13 +19,13 @@ class ListeningController extends Controller
 
     public function create()
     {
-       
+
         return view('pageadmin.managelistening.create');
     }
 
     public function store(Request $request)
     {
-       
+
         $validated = $request->validate([
             'soal' => 'required|array',
             'soal.*.suara' => 'required|string|max:255',
@@ -64,21 +64,18 @@ class ListeningController extends Controller
         return redirect()->route('listening.index');
     }
 
-
-
-
     public function edit($id)
     {
-       
+
         $listening = Listening::find($id);
         return view('pageadmin.managelistening.edit', compact('listening'));
     }
 
     public function update(Request $request, $id)
     {
-       
+
         $listening = Listening::findOrFail($id);
-    
+
         // Validation rules
         $validated = $request->validate([
             'soal' => 'required|array',
@@ -90,12 +87,12 @@ class ListeningController extends Controller
             'soal.*.pilihan.d' => 'required|string|max:255',
             'soal.*.jawaban' => 'required|in:a,b,c,d',
         ]);
-    
+
         // Process soal
         $soalProcessed = [];
         foreach ($validated['soal'] as $key => $soal) {
-          
-    
+
+
             // Add the processed soal to the array
             $soalProcessed[] = [
                 'suara' => $soal['suara'],
@@ -104,7 +101,7 @@ class ListeningController extends Controller
                 'jawaban' => $soal['jawaban'],
             ];
         }
-    
+
         // Update the ujian record with the new data
         $listening->update([
             'soal' => $soalProcessed,
@@ -114,9 +111,6 @@ class ListeningController extends Controller
         Alert::toast('Listening berhasil diperbarui', 'success');
         return redirect()->route('listening.index');
     }
-    
-    
-
 
 
     public function destroy($id)
@@ -130,11 +124,11 @@ class ListeningController extends Controller
 
     public function viewSoal($id)
     {
-        
-        $listening = Listening::find($id);  
-        $soal = $listening->soal;     
-        
+
+        $listening = Listening::find($id);
+        $soal = $listening->soal;
+
         return view('pageadmin.managelistening.view_soal', compact('soal'));
     }
-    
+
 }
