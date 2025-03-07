@@ -134,10 +134,10 @@
 
             // Update button states
             document.getElementById('prevBtn').disabled = pageNum === 1;
-            
+
             // Handle next button visibility
             const nextBtn = document.getElementById('nextBtn');
-            
+
             if (pageNum === totalPages) {
                 nextBtn.classList.add('d-none');
             } else {
